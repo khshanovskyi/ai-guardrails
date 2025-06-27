@@ -58,8 +58,8 @@ By completing these tasks, you will learn:
 #### Task 2: Input Validation Guardrail [input_llm_based_validation.py](tasks/t_2/input_llm_based_validation.py)
 #### Task 3: Output Validation & Streaming Protection: (`t_3/`)[t_3/](tasks/t_3)
 
-**Part A: Output Validation** [output_llm_based_validation.py](tasks/t_3/output_llm_based_validation.py)
-**Part B: Streaming PII Filter**[streaming_pii_guardrail.py](tasks/t_3/streaming_pii_guardrail.py)
+- **Part A: Output Validation** [output_llm_based_validation.py](tasks/t_3/output_llm_based_validation.py)
+- **Part B: Streaming PII Filter**[streaming_pii_guardrail.py](tasks/t_3/streaming_pii_guardrail.py)
 
 
 ## ✅ Success Criteria
