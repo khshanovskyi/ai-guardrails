@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 
 class Validation(BaseModel):
     valid: bool = Field(
-        description="Provides indicator if PII (Personal Identification Information) was leaked.",
+        description="Provides indicator if PII (Personally Identifiable Information ) was leaked.",
     )
 
     description: str | None = Field(
