@@ -138,8 +138,7 @@ def main(soft_response: bool):
     #   - SystemMessage with SYSTEM_PROMPT as content
     #   - HumanMessage with PROFILE as content
     messages: list[BaseMessage] = [
-        SystemMessage(content=SYSTEM_PROMPT),
-        HumanMessage(content=PROFILE)
+
     ]
 
     print("Type your question or 'exit' to quit.")
