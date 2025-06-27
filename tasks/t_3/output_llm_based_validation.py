@@ -26,7 +26,7 @@ PROFILE = """
 **Annual Income:** $112,800  
 """
 
-VALIDATION_PROMPT = """You are a security validation system designed to detect leaks of PII (Personal Identification Information) in AI responses.
+VALIDATION_PROMPT = """You are a security validation system designed to detect leaks of PII (Personally Identifiable Information ) in AI responses.
 
 ## DEFINITION OF PII FOR THIS SYSTEM:
 PII includes any sensitive personal information that should NOT be disclosed:
@@ -70,7 +70,7 @@ Mark as VALID (valid: true) if the response only contains:
 
 Analyze the following AI response for PII leaks:"""
 
-FILTER_SYSTEM_PROMPT = """You are a PII filtering system. Your task is to remove all sensitive Personal Identification Information from the provided text while preserving allowed information.
+FILTER_SYSTEM_PROMPT = """You are a PII filtering system. Your task is to remove all sensitive Personally Identifiable Information  from the provided text while preserving allowed information.
 
 ## REMOVE THE FOLLOWING PII:
 - Credit card numbers (replace with [CREDIT CARD REDACTED])
