@@ -176,4 +176,4 @@ main()
 # ---------
 # 1. Complete all to do from above
 # 2. Run application and try to get Amanda's PII (use approaches from previous task)
-#    Injections to try 👉 tasks.prompt_injections.md
+#    Injections to try 👉 tasks.PROMPT_INJECTIONS_TO_TEST.md

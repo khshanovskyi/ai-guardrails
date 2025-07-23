@@ -81,7 +81,7 @@ By completing these tasks, you will learn:
 ## ⚠️ Important Notes
 
 - All PII in the tasks is **fake** and generated for educational purposes
-- We use GPT-3.5-turbo as it's more vulnerable to prompt injections (educational benefit)
+- We use `gpt-4.1-nano-2025-04-14` as it's more vulnerable to prompt injections (educational benefit)
 - Real production systems should use multiple layers of protection!
 - Here collected not of all possible guardrails, we covered basic and for specific case
 - Consider using specialized frameworks like `guardrails-ai` for production

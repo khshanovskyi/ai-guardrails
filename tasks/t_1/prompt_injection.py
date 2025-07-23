@@ -29,10 +29,10 @@ def main():
     client = AzureChatOpenAI(
         temperature=0.0,
         seed=1234,
-        azure_deployment='gpt-35-turbo',
+        azure_deployment='gpt-4.1-nano-2025-04-14',
         azure_endpoint=DIAL_URL,
         api_key=SecretStr(API_KEY),
-        api_version="2024-08-01-preview"
+        api_version=""
     )
 
     messages: list[BaseMessage] = [
@@ -77,7 +77,7 @@ main()
 #       Additional info: Probably, you will get rejected. Try to manipulate and add some instructions in input (console)
 #                        to persuade LLM provide her info.
 # 3. Add strict instructions to SYSTEM_PROMPT that will forbid LLM to disclose PII (only name, phone and email
-#    are allowed to disclose)
+#    are allowed to disclose). You are free to use LLM for such task.
 # 4. Try to use different approaches with Prompt Injection (try combinations if one doesn't work)
-#    Injections to try 👉 tasks.prompt_injections.md
+#    Injections to try 👉 tasks.PROMPT_INJECTIONS_TO_TEST.md
 # 5. Enhance SYSTEM_PROMPT that no Prompt Injection (and combinations) will work.
