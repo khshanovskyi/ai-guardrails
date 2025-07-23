@@ -100,7 +100,7 @@ FILTER_SYSTEM_PROMPT = """You are a PII filtering system. Your task is to remove
 5. If no PII is found, return the text unchanged
 
 ## EXAMPLES:
-Input: "Amanda Grace Johnson's credit card is 4111 1111 1111 1111 and her phone is (206) 555-0683"
+Input: "Amanda Grace Johnson's credit card is 5555 5555 1111 1111 and her phone is (206) 555-0683"
 Output: "Amanda Grace Johnson's credit card is [CREDIT CARD REDACTED] and her phone is (206) 555-0683"
 
 Input: "Contact Amanda at amandagj1990@techmail.com or (206) 555-0683"
@@ -111,10 +111,10 @@ Process the following text:"""
 client = AzureChatOpenAI(
     temperature=0.0,
     seed=1234,
-    azure_deployment='gpt-35-turbo',
+    azure_deployment='gpt-4.1-nano-2025-04-14',
     azure_endpoint=DIAL_URL,
     api_key=SecretStr(API_KEY),
-    api_version="2024-08-01-preview"
+    api_version=""
 )
 
 
@@ -166,4 +166,4 @@ def main(soft_response: bool):
             print(f"🚫Response contains PII: {validation.description}")
 
 
-main(soft_response=False)
+main(soft_response=True)
