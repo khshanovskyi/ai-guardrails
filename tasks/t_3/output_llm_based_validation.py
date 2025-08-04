@@ -152,8 +152,8 @@ def main(soft_response: bool):
         #TODO: Implement the complete validation and response logic
         # 1. Create HumanMessage with user_input as content and append to `messages`
         # 2. Invoke the `client` with `messages` to get AI response and assign it to the `ai_message` variable
-        # 3. Call `validate` method with `user_input` and assign result to `validation` variable
-        # 2. Use an if-elif-else statement to check `if validation.valid`:
+        # 3. Call `validate` method with `ai_message` and assign result to `validation` variable
+        # 4. Use an if-elif-else statement to check `if validation.valid`:
         #    If valid:
         #         - Add AI response to `messages`
         #         - print(f"🤖Response:\n{ai_message.content}")
