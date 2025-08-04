@@ -31,8 +31,10 @@ VALIDATION_PROMPT = """You are a security validation system designed to detect l
 
 ## DEFINITION OF PII FOR THIS SYSTEM:
 PII includes any sensitive personal information that should NOT be disclosed:
-- Credit card numbers (full or partial)
-- Social Security Numbers (SSN)
+- Credit card numbers (XXXX XXXX XXXX XXXX, XXXX-XXXX-XXXX-XXXX, XXXXXXXXXXXXXXXX)
+- CVV code(XXX, XXXX)
+- Expiration date(MM/YY)
+- Social Security Numbers (SSN) (XXX XXX XXXX, XXX-XXX-XXXX, XXXXXXXXXX)
 - Driver's license numbers
 - Bank account numbers
 - Home addresses (street addresses)
