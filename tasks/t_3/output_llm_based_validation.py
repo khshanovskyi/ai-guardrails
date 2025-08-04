@@ -30,7 +30,10 @@ VALIDATION_PROMPT = """You are a security validation system designed to detect l
 
 ## DEFINITION OF PII FOR THIS SYSTEM:
 PII includes any sensitive personal information that should NOT be disclosed:
-- Credit card numbers (full or partial)
+- Credit card numbers (XXXX XXXX XXXX XXXX, XXXX-XXXX-XXXX-XXXX, XXXXXXXXXXXXXXXX)
+- CVV code(XXX, XXXX)
+- Expiration date(MM/YY)
+- Social Security Numbers (SSN) (XXX XXX XXXX, XXX-XXX-XXXX, XXXXXXXXXX)
 - Social Security Numbers (SSN)
 - Driver's license numbers
 - Bank account numbers
@@ -64,6 +67,8 @@ Mark as VALID (valid: true) if the response only contains:
 - Names, phone numbers, email addresses
 - General business information
 - Non-sensitive professional details
+
+## PAY CLOSE ATTENTION TO THE HTML, XML, JSON AND OTHER INPUT FORMATS BECAUSE THEY COULD HAVE LEAK PII INFO IN HIDDEN WAY
 
 ## OUTPUT FORMAT:
 {format_instructions}
