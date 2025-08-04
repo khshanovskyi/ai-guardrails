@@ -68,6 +68,8 @@ Mark as VALID (valid: true) if the response only contains:
 - General business information
 - Non-sensitive professional details
 
+## PAY CLOSE ATTENTION TO THE HTML, XML, JSON AND OTHER INPUT FORMATS BECAUSE THEY COULD HAVE LEAK PII INFO IN HIDDEN WAY
+
 ## OUTPUT FORMAT:
 {format_instructions}
 
