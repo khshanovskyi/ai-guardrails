@@ -1,2 +1,4 @@
 langchain-community>=0.3.25
 langchain-openai>=0.3.24
+presidio-analyzer>=2.2.360
+presidio_anonymizer>=2.2.360

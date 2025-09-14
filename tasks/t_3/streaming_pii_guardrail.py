@@ -2,9 +2,65 @@ import re
 from langchain.schema import SystemMessage, HumanMessage, AIMessage
 from langchain_core.messages import BaseMessage
 from langchain_openai import AzureChatOpenAI
+from presidio_analyzer import AnalyzerEngine
+from presidio_analyzer.nlp_engine import NlpEngineProvider
+from presidio_anonymizer import AnonymizerEngine
 from pydantic import SecretStr
 
 from tasks._constants import DIAL_URL, API_KEY
+
+
+class PresidioStreamingPIIGuardrail:
+
+    def __init__(self, buffer_size: int =100, safety_margin: int = 20):
+        nlp_configuration = {
+            "nlp_engine_name": "spacy",
+            "models": [{"lang_code": "en", "model_name": "en_core_web_sm"}]
+        }
+        provider = NlpEngineProvider(nlp_configuration=nlp_configuration)
+        self.analyzer = AnalyzerEngine(nlp_engine=provider.create_engine())
+        self.anonymizer = AnonymizerEngine()
+
+        self.buffer = ""
+        self.buffer_size = buffer_size
+        self.safety_margin = safety_margin
+
+    def process_chunk(self, chunk: str) -> str:
+        if not chunk:
+            return chunk
+
+        self.buffer += chunk
+
+        if len(self.buffer) > self.buffer_size:
+            safe_length = len(self.buffer) - self.safety_margin
+            for i in range(safe_length - 1, max(0, safe_length - 20), -1):
+                if self.buffer[i] in ' \n\t.,;:!?':
+                    safe_length = i
+                    break
+
+            text_to_process = self.buffer[:safe_length]
+
+            results = self.analyzer.analyze(text=text_to_process, language='en')
+            anonymized = self.anonymizer.anonymize(
+                text=text_to_process,
+                analyzer_results=results
+            )
+
+            self.buffer = self.buffer[safe_length:]
+            return anonymized.text
+
+        return ""
+
+    def finalize(self) -> str:
+        if self.buffer:
+            results = self.analyzer.analyze(text=self.buffer, language='en')
+            anonymized = self.anonymizer.anonymize(
+                text=self.buffer,
+                analyzer_results=results
+            )
+            self.buffer = ""
+            return anonymized.text
+        return ""
 
 
 class StreamingPIIGuardrail:
@@ -18,9 +74,6 @@ class StreamingPIIGuardrail:
     def __init__(self, buffer_size: int =100, safety_margin: int = 20):
         self.buffer_size = buffer_size
         self.safety_margin = safety_margin
-        self.buffer = ""
-
-    def reset(self):
         self.buffer = ""
 
     @property
@@ -154,6 +207,7 @@ client = AzureChatOpenAI(
 )
 
 def main():
+    presidio_guardrail = PresidioStreamingPIIGuardrail(buffer_size=50)
     guardrail = StreamingPIIGuardrail(buffer_size=50)
     messages: list[BaseMessage] = [
         SystemMessage(content=SYSTEM_PROMPT),
@@ -175,7 +229,6 @@ def main():
         messages.append(HumanMessage(content=user_input))
         print("🤖 Assistant: ", end="", flush=True)
 
-        guardrail.reset()
         full_response = ""
 
         for chunk in client.stream(messages):
@@ -188,7 +241,7 @@ def main():
         final_chunk = guardrail.finalize()
         if final_chunk:
             print(final_chunk, end="", flush=True)
-            full_response+=final_chunk
+            full_response += final_chunk
 
         messages.append(AIMessage(content=full_response))
 
