@@ -77,7 +77,7 @@ class StreamingPIIGuardrail:
         self.buffer = ""
 
     @property
-    def pii_patterns(self):
+    def _pii_patterns(self):
         return {
             'ssn': (
                 r'\b(\d{3}[-\s]?\d{2}[-\s]?\d{4})\b',
@@ -117,17 +117,17 @@ class StreamingPIIGuardrail:
             )
         }
 
-    def detect_and_redact_pii(self, text: str) -> str:
+    def _detect_and_redact_pii(self, text: str) -> str:
         """Apply all PII patterns to redact sensitive information."""
         cleaned_text = text
-        for pattern_name, (pattern, replacement) in self.pii_patterns.items():
+        for pattern_name, (pattern, replacement) in self._pii_patterns.items():
             if pattern_name.lower() in ['cvv', 'card_exp']:
                 cleaned_text = re.sub(pattern, replacement, cleaned_text, flags=re.IGNORECASE | re.MULTILINE)
             else:
                 cleaned_text = re.sub(pattern, replacement, cleaned_text, flags=re.IGNORECASE | re.MULTILINE)
         return cleaned_text
 
-    def has_potential_pii_at_end(self, text: str) -> bool:
+    def _has_potential_pii_at_end(self, text: str) -> bool:
         """Check if text ends with a partial pattern that might be PII."""
         partial_patterns = [
             r'\d{3}[-\s]?\d{0,2}$',  # Partial SSN
@@ -159,12 +159,12 @@ class StreamingPIIGuardrail:
             for i in range(safe_output_length - 1, max(0, safe_output_length - 20), -1):
                 if self.buffer[i] in ' \n\t.,;:!?':
                     test_text = self.buffer[:i]
-                    if not self.has_potential_pii_at_end(test_text):
+                    if not self._has_potential_pii_at_end(test_text):
                         safe_output_length = i
                         break
 
             text_to_output = self.buffer[:safe_output_length]
-            safe_output = self.detect_and_redact_pii(text_to_output)
+            safe_output = self._detect_and_redact_pii(text_to_output)
             self.buffer = self.buffer[safe_output_length:]
             return safe_output
 
@@ -173,7 +173,7 @@ class StreamingPIIGuardrail:
     def finalize(self) -> str:
         """Process any remaining content in the buffer at the end of streaming."""
         if self.buffer:
-            final_output = self.detect_and_redact_pii(self.buffer)
+            final_output = self._detect_and_redact_pii(self.buffer)
             self.buffer = ""
             return final_output
         return ""
