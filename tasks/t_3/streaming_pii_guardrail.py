@@ -13,23 +13,21 @@ from tasks._constants import DIAL_URL, API_KEY
 class PresidioStreamingPIIGuardrail:
 
     def __init__(self, buffer_size: int =100, safety_margin: int = 20):
-        nlp_configuration = {
-            "nlp_engine_name": "spacy",
-            "models": [{"lang_code": "en", "model_name": "en_core_web_sm"}]
-        }
-        provider = NlpEngineProvider(nlp_configuration=nlp_configuration)
-        self.analyzer = AnalyzerEngine(nlp_engine=provider.create_engine())
-        self.anonymizer = AnonymizerEngine()
-
-        self.buffer = ""
-        self.buffer_size = buffer_size
-        self.safety_margin = safety_margin
+        #TODO:
+        # 1. Create dict with language configurations: {"nlp_engine_name": "spacy","models": [{"lang_code": "en", "model_name": "en_core_web_sm"}]}
+        #    Read more about it here: https://microsoft.github.io/presidio/tutorial/05_languages/
+        # 2. Create NlpEngineProvider with created configurations
+        # 3. Create AnalyzerEngine, as `nlp_engine` crate engine by crated provider (will be used as obj var later)
+        # 4. Create AnonymizerEngine (will be used as obj var later)
+        # 5. Create buffer as empty string (here we will accumulate chunks content and process it, will be used as obj var late)
+        # 6. Create buffer_size as `buffer_size` (will be used as obj var late)
+        # 7. Create safety_margin as `safety_margin` (will be used as obj var late)
+        raise NotImplementedError
 
     def process_chunk(self, chunk: str) -> str:
-        if not chunk:
-            return chunk
-
-        self.buffer += chunk
+        #TODO:
+        # 1. Check if chunk is present, if not then return chunk itself
+        # 2. Accumulate chunk to `buffer`
 
         if len(self.buffer) > self.buffer_size:
             safe_length = len(self.buffer) - self.safety_margin
@@ -40,27 +38,25 @@ class PresidioStreamingPIIGuardrail:
 
             text_to_process = self.buffer[:safe_length]
 
-            results = self.analyzer.analyze(text=text_to_process, language='en')
-            anonymized = self.anonymizer.anonymize(
-                text=text_to_process,
-                analyzer_results=results
-            )
-
-            self.buffer = self.buffer[safe_length:]
-            return anonymized.text
+            #TODO:
+            # 1. Get results with analyzer by method analyze, text is `text_to_process`, language is 'en'
+            # 2. Anonymize content, use anonymizer method anonymize with such params:
+            #       - text=text_to_process
+            #       - analyzer_results=results
+            # 3. Set `buffer` as `buffer[safe_length:]`
+            # 4. Return anonymized text
+            raise NotImplementedError
 
         return ""
 
     def finalize(self) -> str:
-        if self.buffer:
-            results = self.analyzer.analyze(text=self.buffer, language='en')
-            anonymized = self.anonymizer.anonymize(
-                text=self.buffer,
-                analyzer_results=results
-            )
-            self.buffer = ""
-            return anonymized.text
-        return ""
+        #TODO:
+        # 1. Check if `buffer` is present, otherwise return empty string
+        # 2. Analyze `buffer`
+        # 3. Anonymize `buffer` with analyzed results
+        # 4. Set `buffer` as empty string
+        # 5. Return anonymized text
+        raise NotImplementedError
 
 
 class StreamingPIIGuardrail:
@@ -77,7 +73,7 @@ class StreamingPIIGuardrail:
         self.buffer = ""
 
     @property
-    def pii_patterns(self):
+    def _pii_patterns(self):
         return {
             'ssn': (
                 r'\b(\d{3}[-\s]?\d{2}[-\s]?\d{4})\b',
@@ -117,17 +113,17 @@ class StreamingPIIGuardrail:
             )
         }
 
-    def detect_and_redact_pii(self, text: str) -> str:
+    def _detect_and_redact_pii(self, text: str) -> str:
         """Apply all PII patterns to redact sensitive information."""
         cleaned_text = text
-        for pattern_name, (pattern, replacement) in self.pii_patterns.items():
+        for pattern_name, (pattern, replacement) in self._pii_patterns.items():
             if pattern_name.lower() in ['cvv', 'card_exp']:
                 cleaned_text = re.sub(pattern, replacement, cleaned_text, flags=re.IGNORECASE | re.MULTILINE)
             else:
                 cleaned_text = re.sub(pattern, replacement, cleaned_text, flags=re.IGNORECASE | re.MULTILINE)
         return cleaned_text
 
-    def has_potential_pii_at_end(self, text: str) -> bool:
+    def _has_potential_pii_at_end(self, text: str) -> bool:
         """Check if text ends with a partial pattern that might be PII."""
         partial_patterns = [
             r'\d{3}[-\s]?\d{0,2}$',  # Partial SSN
@@ -159,12 +155,12 @@ class StreamingPIIGuardrail:
             for i in range(safe_output_length - 1, max(0, safe_output_length - 20), -1):
                 if self.buffer[i] in ' \n\t.,;:!?':
                     test_text = self.buffer[:i]
-                    if not self.has_potential_pii_at_end(test_text):
+                    if not self._has_potential_pii_at_end(test_text):
                         safe_output_length = i
                         break
 
             text_to_output = self.buffer[:safe_output_length]
-            safe_output = self.detect_and_redact_pii(text_to_output)
+            safe_output = self._detect_and_redact_pii(text_to_output)
             self.buffer = self.buffer[safe_output_length:]
             return safe_output
 
@@ -173,7 +169,7 @@ class StreamingPIIGuardrail:
     def finalize(self) -> str:
         """Process any remaining content in the buffer at the end of streaming."""
         if self.buffer:
-            final_output = self.detect_and_redact_pii(self.buffer)
+            final_output = self._detect_and_redact_pii(self.buffer)
             self.buffer = ""
             return final_output
         return ""
