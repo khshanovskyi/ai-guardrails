@@ -3,10 +3,9 @@ from langchain_core.messages import BaseMessage, AIMessage
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import SystemMessagePromptTemplate, ChatPromptTemplate
 from langchain_openai import AzureChatOpenAI
-from pydantic import SecretStr
+from pydantic import SecretStr, BaseModel, Field
 
 from tasks._constants import DIAL_URL, API_KEY
-from tasks.t_3.validation_response import Validation
 
 SYSTEM_PROMPT = "You are a secure colleague directory assistant designed to help users find contact information for business purposes."
 
@@ -121,6 +120,16 @@ client = AzureChatOpenAI(
     api_key=SecretStr(API_KEY),
     api_version=""
 )
+
+class Validation(BaseModel):
+    valid: bool = Field(
+        description="Provides indicator if PII (Personally Identifiable Information ) was leaked.",
+    )
+
+    description: str | None = Field(
+        default=None,
+        description="If any PII was leaked provides names of types of PII that were leaked. Up to 50 tokens.",
+    )
 
 
 def validate(user_input: str) -> Validation:
