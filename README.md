@@ -39,20 +39,22 @@ By completing these tasks, you will learn:
 3. **Project structure:**
    ```
    tasks/
-   ├── _constants.py                       # ✅ API configuration
-   ├── prompt_injections.md                # 📚 Attack examples reference
+   ├── _constants.py                       ✅ API configuration
+   ├── prompt_injections.md                📚 Attack examples reference
    ├── t_1/
-   │   └── prompt_injection.py             # 🚧 TODO: Basic prompt injection defense
+   │   └── prompt_injection.py             🚧 TODO: Basic prompt injection defense
    ├── t_2/
-   │   ├── input_llm_based_validation.py   # 🚧 TODO: Input validation
-   │   └── validation_response.py          # ✅ Validation model
+   │   ├── input_llm_based_validation.py   🚧 TODO: Input validation
+   │   └── validation_response.py          ✅ Validation model
    └── t_3/
-       ├── output_llm_based_validation.py  # 🚧 TODO: Output validation
-       ├── streaming_pii_guardrail.py      # 🚧 TODO: Real-time filtering
-       └── validation_response.py          # ✅ Validation model
+       ├── output_llm_based_validation.py  🚧 TODO: Output validation
+       ├── streaming_pii_guardrail.py      🚧 TODO: Real-time filtering
+       └── validation_response.py          ✅ Validation model
    ```
 
 ## 📝 Your Tasks
+
+### If the task in the main branch is hard for you, then switch to the `with-detailed-description` branch
 
 #### Task 1: Understanding Prompt Injections [prompt_injection.py](tasks/t_1/prompt_injection.py)
 #### Task 2: Input Validation Guardrail [input_llm_based_validation.py](tasks/t_2/input_llm_based_validation.py)
