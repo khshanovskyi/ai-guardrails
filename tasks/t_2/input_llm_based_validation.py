@@ -3,10 +3,9 @@ from langchain_core.messages import BaseMessage
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import SystemMessagePromptTemplate, ChatPromptTemplate
 from langchain_openai import AzureChatOpenAI
-from pydantic import SecretStr
+from pydantic import SecretStr, BaseModel, Field
 
 from tasks._constants import DIAL_URL, API_KEY
-from tasks.t_2.validation_response import Validation
 
 SYSTEM_PROMPT = "You are a secure colleague directory assistant designed to help users find contact information for business purposes."
 
@@ -53,6 +52,16 @@ client = AzureChatOpenAI(
     api_key=SecretStr(API_KEY),
     api_version=""
 )
+
+class Validation(BaseModel):
+    valid: bool = Field(
+        description="Provides indicator if any Prompt Injections are found.",
+    )
+
+    description: str | None = Field(
+        default=None,
+        description="If any Prompt Injections are found provides description of the Prompt Injection. Up to 50 tokens.",
+    )
 
 def validate(user_input: str) -> Validation:
     parser: PydanticOutputParser = None#TODO: Create `PydanticOutputParser` with `pydantic_object=Validation`
